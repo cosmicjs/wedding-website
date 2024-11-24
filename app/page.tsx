@@ -34,19 +34,8 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-12">
-        <div className="flex justify-center mb-12">
-          <div className="w-72 h-72 rounded-full overflow-hidden">
-            <img
-              src={homePage.metadata.main_image.imgix_url}
-              alt={homePage.metadata.main_image.alt_text}
-              width={homePage.metadata.main_image.width}
-              height={homePage.metadata.main_image.height}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Save the Date
           </h1>
           <h2 className="text-2xl text-gray-700 dark:text-gray-200 mb-2">
@@ -56,8 +45,21 @@ export default async function Home() {
             May 4, 2025
           </h3>
         </div>
-        <div className="my-16">
-          <DonationForm />
+        <div className="flex flex-col md:flex-row md:space-x-12 mb-16">
+          <div className="md:w-1/2 flex justify-center mb-12 md:mb-0">
+            <div className="w-full h-[500px] rounded-xl overflow-hidden">
+              <img
+                src={homePage.metadata.main_image.imgix_url}
+                alt={homePage.metadata.main_image.alt_text}
+                width={homePage.metadata.main_image.width}
+                height={homePage.metadata.main_image.height}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+          <div className="md:w-1/2 text-center md:text-left">
+            <DonationForm />
+          </div>
         </div>
         <Gallery media={homePage.metadata.gallery} />
       </div>
