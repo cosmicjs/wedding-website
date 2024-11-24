@@ -38,8 +38,8 @@ export default function DonationForm() {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-      <h2 className="text-2xl mb-4 text-center font-bold text-gray-900 dark:text-white mb-4">
+    <div className="max-w-lg h-full mx-auto p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+      <h2 className="text-2xl mb-8 text-center font-bold text-gray-900 dark:text-white">
         Contribute to our Honeymoon
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
