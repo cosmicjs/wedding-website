@@ -1,7 +1,7 @@
 // app/components/RSVPForm.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createCheckoutSession } from "../actions/stripe";
 import { addGuest } from "../actions/guests";
 import { loadStripe } from "@stripe/stripe-js";
@@ -9,6 +9,13 @@ import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
+
+// Load the reCAPTCHA script
+const loadReCaptcha = () => {
+  const script = document.createElement("script");
+  script.src = `https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`;
+  document.body.appendChild(script);
+};
 
 export default function RSVPForm({
   contributionMessage,
@@ -24,14 +31,25 @@ export default function RSVPForm({
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    loadReCaptcha();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
+      // Get the token silently
+      const recaptchaToken = await window.grecaptcha.execute(
+        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
+        { action: "submit" }
+      );
+
       await addGuest({
         name,
         email,
+        recaptchaToken,
       });
       if (amount) {
         const { sessionId } = await createCheckoutSession({
@@ -117,6 +135,18 @@ export default function RSVPForm({
         >
           {isLoading ? "Processing..." : "RSVP"}
         </button>
+
+        <p className="text-xs text-gray-500 mt-4 text-center">
+          This site is protected by reCAPTCHA and the Google{" "}
+          <a href="https://policies.google.com/privacy" className="underline">
+            Privacy Policy
+          </a>{" "}
+          and{" "}
+          <a href="https://policies.google.com/terms" className="underline">
+            Terms of Service
+          </a>{" "}
+          apply.
+        </p>
       </form>
     </div>
   );

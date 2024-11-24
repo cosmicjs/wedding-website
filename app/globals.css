@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add this to hide the badge */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
