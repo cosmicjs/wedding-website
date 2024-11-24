@@ -50,9 +50,9 @@ export default async function Home() {
         </div>
         <div className="flex flex-col md:flex-row md:space-x-12 mb-16">
           <div className="md:w-1/2 flex justify-center mb-12 md:mb-0">
-            <div className="w-full h-[500px] rounded-xl overflow-hidden">
+            <div className="w-full h-[382px] rounded-xl overflow-hidden">
               <img
-                src={homePage.metadata.main_image.imgix_url}
+                src={`${homePage.metadata.main_image.imgix_url}?w=1000&focus=faces&fit=crop&auto=format`}
                 alt={homePage.metadata.main_image.alt_text}
                 width={homePage.metadata.main_image.width}
                 height={homePage.metadata.main_image.height}
