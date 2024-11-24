@@ -43,10 +43,10 @@ export default async function Home() {
           <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
             {homePage.metadata.h1}
           </h1>
-          <h2 className="text-2xl text-gray-700 dark:text-gray-200 mb-2">
+          <h2 className="text-xl md:text-2xl text-gray-700 dark:text-gray-200 mb-2">
             {homePage.metadata.h2}
           </h2>
-          <h3 className="text-xl text-gray-600 dark:text-gray-300">
+          <h3 className="text-lg md:text-xl text-gray-600 dark:text-gray-300">
             {homePage.metadata.h3}
           </h3>
         </div>
