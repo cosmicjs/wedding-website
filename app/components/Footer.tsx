@@ -1,4 +1,4 @@
-import cosmic from "../../lib/cosmic";
+import cosmic from "@/lib/cosmic";
 
 async function getFooter() {
   const { object } = await cosmic.objects
