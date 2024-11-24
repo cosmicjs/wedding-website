@@ -2,13 +2,18 @@
 "use client";
 
 import { useState } from "react";
+import { createCheckoutSession } from "../actions/stripe";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-export default function DonationForm() {
+export default function DonationForm({
+  contributionMessage,
+}: {
+  contributionMessage: string;
+}) {
   const [amount, setAmount] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,15 +24,12 @@ export default function DonationForm() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount }),
+      const { sessionId } = await createCheckoutSession({
+        amount,
+        name,
+        email,
       });
 
-      const { sessionId } = await response.json();
       const stripe = await stripePromise;
       await stripe?.redirectToCheckout({ sessionId });
     } catch (error) {
@@ -38,9 +40,9 @@ export default function DonationForm() {
   };
 
   return (
-    <div className="max-w-lg h-full mx-auto p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+    <div className="h-full mx-auto p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
       <h2 className="text-2xl mb-8 text-center font-bold text-gray-900 dark:text-white">
-        Contribute to our Honeymoon
+        {contributionMessage}
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>

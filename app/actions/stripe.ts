@@ -1,15 +1,25 @@
-// app/api/create-checkout-session/route.ts
-import { NextResponse } from "next/server";
+"use server";
+
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export async function POST(request: Request) {
+export async function createCheckoutSession({
+  amount,
+  name,
+  email,
+}: {
+  amount: string;
+  name: string;
+  email: string;
+}) {
   try {
-    const { amount } = await request.json();
-
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
+      customer_email: email, // Pre-fill customer email
+      metadata: {
+        customerName: name, // Store customer name in metadata
+      },
       line_items: [
         {
           price_data: {
@@ -24,16 +34,13 @@ export async function POST(request: Request) {
         },
       ],
       mode: "payment",
-      success_url: `${request.headers.get("origin")}/thank-you`,
-      cancel_url: `${request.headers.get("origin")}/`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/thank-you`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
     });
 
-    return NextResponse.json({ sessionId: session.id });
+    return { sessionId: session.id };
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: "Error creating checkout session" },
-      { status: 500 }
-    );
+    throw new Error("Error creating checkout session");
   }
 }

@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Footer from "./components/Footer";
+import cosmic from "./cosmic";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -13,9 +13,14 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const metadata: Metadata = {
-  title: "Spiro Wedding - May 4, 2025",
-  description: "Sarah & Tony Spiro wedding on May 4, 2025",
+export const generateMetadata = async () => {
+  const { object } = await cosmic.objects
+    .findOne({ type: "site-settings", slug: "site-settings" })
+    .props("metadata.site_title,metadata.site_description");
+  return {
+    title: object.metadata.site_title,
+    description: object.metadata.site_description,
+  };
 };
 
 export const revalidate = 60;
