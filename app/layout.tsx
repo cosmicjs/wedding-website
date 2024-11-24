@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   description: "Sarah & Tony Spiro wedding on May 4, 2025",
 };
 
+export const revalidate = 60;
+
 export default function RootLayout({
   children,
 }: Readonly<{
