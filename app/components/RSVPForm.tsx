@@ -6,6 +6,17 @@ import { createCheckoutSession } from "../actions/stripe";
 import { addGuest } from "../actions/guests";
 import { loadStripe } from "@stripe/stripe-js";
 
+declare global {
+  interface Window {
+    grecaptcha: {
+      execute: (
+        siteKey: string,
+        options: { action: string }
+      ) => Promise<string>;
+    };
+  }
+}
+
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
