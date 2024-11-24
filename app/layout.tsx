@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Spiro Wedding",
+  title: "Spiro Wedding - May 4, 2025",
   description: "Sarah & Tony Spiro wedding on May 4, 2025",
 };
 

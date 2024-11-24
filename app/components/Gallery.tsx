@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import ImageModal from "./ImageModal";
 
@@ -17,6 +17,24 @@ export default function Gallery({ media }: GalleryProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
   );
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // 768px is a common mobile breakpoint
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const handleImageClick = (index: number) => {
+    if (!isMobile) {
+      setSelectedImageIndex(index);
+    }
+  };
 
   return (
     <>
@@ -24,10 +42,12 @@ export default function Gallery({ media }: GalleryProps) {
         {media.map((item, index) => (
           <div
             key={index}
-            className="relative cursor-pointer rounded-lg overflow-hidden 
+            className={`relative rounded-lg overflow-hidden 
               transition-transform duration-300 hover:scale-[1.02] bg-white dark:bg-gray-800 
-              shadow-md hover:shadow-lg break-inside-avoid"
-            onClick={() => setSelectedImageIndex(index)}
+              shadow-md hover:shadow-lg break-inside-avoid ${
+                !isMobile ? "cursor-pointer" : ""
+              }`}
+            onClick={() => handleImageClick(index)}
           >
             <div className="relative w-full">
               <Image
