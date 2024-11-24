@@ -11,9 +11,10 @@ interface GalleryProps {
     width: number;
     height: number;
   }>;
+  id: string;
 }
 
-export default function Gallery({ media }: GalleryProps) {
+export default function Gallery({ media, id }: GalleryProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
   );
@@ -38,7 +39,10 @@ export default function Gallery({ media }: GalleryProps) {
 
   return (
     <>
-      <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 p-4 space-y-6">
+      <div
+        id={id}
+        className="columns-1 sm:columns-2 lg:columns-3 gap-6 p-4 space-y-6"
+      >
         {media.map((item, index) => (
           <div
             key={index}

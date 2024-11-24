@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function ScrollArrow() {
+export default function ScrollArrow({ scrollTo }: { scrollTo: string }) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -17,9 +17,12 @@ export default function ScrollArrow() {
 
   return (
     <div
-      onClick={() =>
-        window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
-      }
+      onClick={() => {
+        const element = document.getElementById(scrollTo);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }}
       className={`hidden md:flex justify-center cursor-pointer fixed bottom-8 right-8 hover:opacity-75 transition-opacity ${
         isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import cosmic from "../cosmic";
+import cosmic from "@/lib/cosmic";
 
 async function getThankYouPage() {
   const { object } = await cosmic.objects
@@ -45,7 +45,7 @@ export default async function ThankYou() {
             Thank You!
           </h1>
           <div
-            className="text-lg text-gray-600 dark:text-gray-300 mb-8 text-left"
+            className="text-lg max-w-xl text-gray-600 dark:text-gray-300 mb-8 text-left"
             dangerouslySetInnerHTML={{ __html: thankYouPage.metadata.message }}
           />
           <Link

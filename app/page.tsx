@@ -1,6 +1,6 @@
 // app/page.tsx
-import cosmic from "./cosmic";
-import DonationForm from "./components/DonationForm";
+import cosmic from "@/lib/cosmic";
+import RSVPForm from "./components/RSVPForm";
 import Gallery from "./components/Gallery";
 import ScrollArrow from "./components/ScrollArrow";
 
@@ -22,6 +22,8 @@ async function getHomePage() {
           alt_text
         }
         contribute_message
+        rsvp_title
+        rsvp_message
       }
     }`
     )
@@ -51,7 +53,7 @@ export default async function Home() {
           </h3>
         </div>
         <div className="flex  max-w-5xl mx-auto flex-col md:flex-row md:space-x-12 mb-16">
-          <div className="lg:h-[400px] md:w-1/2 flex justify-center mb-12 md:mb-0">
+          <div className="md:w-1/2 flex justify-center mb-12 md:mb-0">
             <div className="w-full h-full rounded-xl overflow-hidden">
               <img
                 src={`${homePage.metadata.main_image.imgix_url}?w=1000&focus=faces&fit=crop&auto=format`}
@@ -62,14 +64,16 @@ export default async function Home() {
               />
             </div>
           </div>
-          <div className="lg:h-[400px] md:w-1/2 text-center md:text-left">
-            <DonationForm
+          <div className="md:w-1/2 text-center md:text-left">
+            <RSVPForm
+              rsvpTitle={homePage.metadata.rsvp_title}
+              rsvpMessage={homePage.metadata.rsvp_message}
               contributionMessage={homePage.metadata.contribute_message}
             />
           </div>
         </div>
-        <ScrollArrow />
-        <Gallery media={homePage.metadata.gallery} />
+        <ScrollArrow scrollTo="gallery" />
+        <Gallery id="gallery" media={homePage.metadata.gallery} />
       </div>
     </main>
   );

@@ -3,7 +3,7 @@
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-import cosmic from "../cosmic";
+import cosmic from "@/lib/cosmic";
 
 export async function createCheckoutSession({
   amount,
