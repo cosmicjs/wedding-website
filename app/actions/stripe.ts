@@ -3,6 +3,7 @@
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+import cosmic from "../cosmic";
 
 export async function createCheckoutSession({
   amount,
@@ -13,6 +14,9 @@ export async function createCheckoutSession({
   name: string;
   email: string;
 }) {
+  const { object } = await cosmic.objects
+    .findOne({ type: "site-settings", slug: "site-settings" })
+    .props("metadata.stripe_product_name,metadata.stripe_product_description");
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -25,8 +29,8 @@ export async function createCheckoutSession({
           price_data: {
             currency: "usd",
             product_data: {
-              name: "Wedding Gift",
-              description: "Gift for Sarah & Tony's Wedding",
+              name: object.metadata.stripe_product_name,
+              description: object.metadata.stripe_product_description,
             },
             unit_amount: Math.round(parseFloat(amount) * 100),
           },

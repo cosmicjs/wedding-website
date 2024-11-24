@@ -16,10 +16,13 @@ const geistMono = localFont({
 export const generateMetadata = async () => {
   const { object } = await cosmic.objects
     .findOne({ type: "site-settings", slug: "site-settings" })
-    .props("metadata.site_title,metadata.site_description");
+    .props("metadata.site_title,metadata.site_description,metadata.favicon");
   return {
     title: object.metadata.site_title,
     description: object.metadata.site_description,
+    icons: {
+      icon: object.metadata.favicon.imgix_url,
+    },
   };
 };
 
