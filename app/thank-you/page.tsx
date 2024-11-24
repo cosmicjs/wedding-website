@@ -1,6 +1,6 @@
 import Link from "next/link";
 import cosmic from "@/lib/cosmic";
-
+import Image from "next/image";
 async function getThankYouPage() {
   const { object } = await cosmic.objects
     .findOne({
@@ -20,7 +20,7 @@ async function getThankYouPage() {
     )
     .options({
       media: {
-        props: "alt_text",
+        props: "alt_text,width,height",
       },
     });
   return object;
@@ -32,9 +32,11 @@ export default async function ThankYou() {
     <div className="bg-gray-50 py-12 dark:bg-gray-900">
       <div className="flex justify-center">
         <div className="w-72 h-72 rounded-full overflow-hidden">
-          <img
-            src={thankYouPage.metadata.image.imgix_url}
+          <Image
+            src={`${thankYouPage.metadata.image.imgix_url}?w=1200&auto=format,compress`}
             alt={thankYouPage.metadata.image.alt_text}
+            width={thankYouPage.metadata.image.width}
+            height={thankYouPage.metadata.image.height}
             className="w-full h-full object-cover"
           />
         </div>

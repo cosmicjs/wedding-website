@@ -53,13 +53,16 @@ export default function Gallery({ media, id }: GalleryProps) {
               }`}
             onClick={() => handleImageClick(index)}
           >
-            <div className="relative w-full">
+            <div
+              className="relative w-full"
+              style={{ aspectRatio: `${item.width} / ${item.height}` }}
+            >
               <Image
                 src={item.imgix_url}
                 alt={item.alt_text}
                 width={item.width}
                 height={item.height}
-                className="w-full h-auto"
+                className="w-full h-full object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
