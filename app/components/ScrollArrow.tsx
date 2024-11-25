@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 
 export default function ScrollArrow({ scrollTo }: { scrollTo: string }) {
-  const [isVisible, setIsVisible] = useState(true);
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [isAboveGallery, setIsAboveGallery] = useState(true);
 
@@ -44,8 +43,8 @@ export default function ScrollArrow({ scrollTo }: { scrollTo: string }) {
     }
   };
 
-  // Only show if we're scrolled down and either above gallery or at bottom
-  const shouldShow = isVisible && (isAboveGallery || isAtBottom);
+  // Remove isVisible from the condition since it's always true
+  const shouldShow = isAboveGallery || isAtBottom;
 
   return shouldShow ? (
     <div
