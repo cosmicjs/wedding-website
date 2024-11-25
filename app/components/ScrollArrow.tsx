@@ -4,28 +4,53 @@ import { useEffect, useState } from "react";
 
 export default function ScrollArrow({ scrollTo }: { scrollTo: string }) {
   const [isVisible, setIsVisible] = useState(true);
+  const [isAtBottom, setIsAtBottom] = useState(false);
+  const [isAboveGallery, setIsAboveGallery] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.scrollY;
-      setIsVisible(scrolled < window.innerHeight);
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // Get gallery position
+      const galleryElement = document.getElementById(scrollTo);
+      if (galleryElement) {
+        const galleryTop = galleryElement.offsetTop;
+        setIsAboveGallery(scrolled < galleryTop - windowHeight / 2);
+      }
+
+      // Check if at bottom
+      setIsAtBottom(scrolled + windowHeight >= documentHeight - 100);
     };
+
+    // Initial check
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [scrollTo]);
 
-  return (
+  const handleClick = () => {
+    if (isAtBottom || !isAboveGallery) {
+      // Scroll to top when below gallery or at bottom
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      // Scroll to gallery when above it
+      const element = document.getElementById(scrollTo);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
+  // Only show if we're scrolled down and either above gallery or at bottom
+  const shouldShow = isVisible && (isAboveGallery || isAtBottom);
+
+  return shouldShow ? (
     <div
-      onClick={() => {
-        const element = document.getElementById(scrollTo);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
-      }}
-      className={`hidden md:flex justify-center cursor-pointer fixed bottom-8 right-8 hover:opacity-75 transition-opacity ${
-        isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      onClick={handleClick}
+      className="hidden md:flex justify-center cursor-pointer fixed bottom-8 right-8 hover:opacity-75 transition-opacity"
     >
       <svg
         className="w-8 h-8 text-gray-600 dark:text-gray-300"
@@ -36,8 +61,12 @@ export default function ScrollArrow({ scrollTo }: { scrollTo: string }) {
         viewBox="0 0 24 24"
         stroke="currentColor"
       >
-        <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        {isAtBottom || !isAboveGallery ? (
+          <path d="M5 10l7-7m0 0l7 7m-7-7v18" /> // Up arrow
+        ) : (
+          <path d="M19 14l-7 7m0 0l-7-7m7 7V3" /> // Down arrow
+        )}
       </svg>
     </div>
-  );
+  ) : null;
 }
