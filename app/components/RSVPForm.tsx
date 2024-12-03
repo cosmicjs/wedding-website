@@ -41,6 +41,7 @@ export default function RSVPForm({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [quantity, setQuantity] = useState(2);
 
   useEffect(() => {
     loadReCaptcha();
@@ -60,6 +61,7 @@ export default function RSVPForm({
       await addGuest({
         name,
         email,
+        quantity,
         recaptchaToken,
       });
       if (amount) {
@@ -115,6 +117,30 @@ export default function RSVPForm({
               focus:ring-2 focus:ring-blue-500 focus:border-transparent
               transition duration-200"
           />
+        </div>
+        <div>
+          <label
+            htmlFor="quantity"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Number of Guests
+          </label>
+          <select
+            id="quantity"
+            value={quantity}
+            onChange={(e) => setQuantity(parseInt(e.target.value))}
+            required
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+              bg-white dark:bg-gray-700 text-gray-900 dark:text-white
+              focus:ring-2 focus:ring-blue-500 focus:border-transparent
+              transition duration-200"
+          >
+            {[1, 2, 3, 4, 5].map((num) => (
+              <option key={num} value={num}>
+                {num} {num === 1 ? "Guest" : "Guests"}
+              </option>
+            ))}
+          </select>
         </div>
         <div
           className="text-gray-600 dark:text-gray-300 text-left"

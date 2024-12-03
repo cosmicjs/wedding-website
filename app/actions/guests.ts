@@ -7,9 +7,15 @@ interface GuestData {
   name: string;
   email: string;
   recaptchaToken: string;
+  quantity?: number;
 }
 
-export async function addGuest({ name, email, recaptchaToken }: GuestData) {
+export async function addGuest({
+  name,
+  email,
+  recaptchaToken,
+  quantity,
+}: GuestData) {
   const recaptchaVerification = await axios.post(
     `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`
   );
@@ -29,6 +35,7 @@ export async function addGuest({ name, email, recaptchaToken }: GuestData) {
         name,
         email,
         attending: true, // Since they're submitting the RSVP form, we'll set this to true
+        quantity,
       },
     });
 
