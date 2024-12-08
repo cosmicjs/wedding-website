@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import Footer from "./components/Footer";
-import cosmic, { getHomePage } from "@/lib/cosmic";
+import cosmic from "@/lib/cosmic";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -14,7 +14,6 @@ const geistMono = localFont({
 });
 
 export const generateMetadata = async () => {
-  const homePage = await getHomePage();
   const { object } = await cosmic.objects
     .findOne({ type: "site-settings", slug: "site-settings" })
     .props("metadata.site_title,metadata.site_description,metadata.favicon");
@@ -24,7 +23,6 @@ export const generateMetadata = async () => {
     icons: {
       icon: object.metadata.favicon.imgix_url,
     },
-    images: [`${homePage.metadata.main_image.imgix_url}?w=1200&auto=compress`],
   };
 };
 
