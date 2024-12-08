@@ -80,8 +80,8 @@ export default function RSVPForm({
         });
         const stripe = await stripePromise;
         await stripe?.redirectToCheckout({ sessionId });
-        window.location.href = "/thank-you";
       }
+      window.location.href = "/thank-you";
     } catch (error) {
       console.error("Error:", error);
     } finally {
