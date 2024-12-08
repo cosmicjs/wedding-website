@@ -4,6 +4,7 @@ import RSVPForm from "./components/RSVPForm";
 import Gallery from "./components/Gallery";
 import ScrollArrow from "./components/ScrollArrow";
 import Image from "next/image";
+
 async function getHomePage() {
   const { object } = await cosmic.objects
     .findOne({
@@ -37,6 +38,7 @@ async function getHomePage() {
 
 export default async function Home() {
   const homePage = await getHomePage();
+  const bitcoinAddress = process.env.BITCOIN_ADDRESS;
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
@@ -52,7 +54,7 @@ export default async function Home() {
             {homePage.metadata.h3}
           </h3>
         </div>
-        <div className="flex  max-w-5xl mx-auto flex-col md:flex-row md:space-x-12 mb-16">
+        <div className="flex max-w-5xl mx-auto flex-col md:flex-row md:space-x-12 mb-16">
           <div className="md:w-1/2 flex justify-center mb-12 md:mb-0">
             <div className="w-full h-full rounded-xl overflow-hidden">
               <Image
@@ -69,6 +71,7 @@ export default async function Home() {
               rsvpTitle={homePage.metadata.rsvp_title}
               rsvpMessage={homePage.metadata.rsvp_message}
               contributionMessage={homePage.metadata.contribute_message}
+              bitcoinAddress={bitcoinAddress}
             />
           </div>
         </div>

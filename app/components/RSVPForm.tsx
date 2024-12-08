@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { createCheckoutSession } from "../actions/stripe";
 import { addGuest } from "../actions/guests";
 import { loadStripe } from "@stripe/stripe-js";
+import { QRCodeSVG } from "qrcode.react";
+import { FaCreditCard, FaBitcoin } from "react-icons/fa";
 
 declare global {
   interface Window {
@@ -32,16 +34,22 @@ export default function RSVPForm({
   contributionMessage,
   rsvpMessage,
   rsvpTitle,
+  bitcoinAddress,
 }: {
   contributionMessage: string;
   rsvpMessage: string;
   rsvpTitle: string;
+  bitcoinAddress?: string;
 }) {
   const [amount, setAmount] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [quantity, setQuantity] = useState(2);
+  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "bitcoin">(
+    "stripe"
+  );
+  const [showCopiedTooltip, setShowCopiedTooltip] = useState(false);
 
   useEffect(() => {
     loadReCaptcha();
@@ -52,7 +60,6 @@ export default function RSVPForm({
     setIsLoading(true);
 
     try {
-      // Get the token silently
       const recaptchaToken = await window.grecaptcha.execute(
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
         { action: "submit" }
@@ -64,7 +71,8 @@ export default function RSVPForm({
         quantity,
         recaptchaToken,
       });
-      if (amount) {
+
+      if (paymentMethod === "stripe" && amount) {
         const { sessionId } = await createCheckoutSession({
           amount,
           name,
@@ -72,6 +80,9 @@ export default function RSVPForm({
         });
         const stripe = await stripePromise;
         await stripe?.redirectToCheckout({ sessionId });
+      } else if (paymentMethod === "bitcoin" && amount) {
+        setPaymentMethod("bitcoin");
+        setAmount("");
       } else {
         window.location.href = "/thank-you";
       }
@@ -79,6 +90,21 @@ export default function RSVPForm({
       console.error("Error:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleBitcoinSelect = () => {
+    setPaymentMethod("bitcoin");
+    setAmount("");
+  };
+
+  const handleCopyAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(bitcoinAddress);
+      setShowCopiedTooltip(true);
+      setTimeout(() => setShowCopiedTooltip(false), 2000); // Hide after 2 seconds
+    } catch (err) {
+      console.error("Failed to copy address:", err);
     }
   };
 
@@ -143,26 +169,95 @@ export default function RSVPForm({
           </select>
         </div>
         <div
-          className="text-gray-600 dark:text-gray-300 text-left"
+          className="pt-[20px] text-gray-600 dark:text-gray-300 text-left text-lg font-semibold"
           dangerouslySetInnerHTML={{ __html: contributionMessage }}
         />
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <span className="text-gray-500 dark:text-gray-400">$</span>
+        {bitcoinAddress && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Payment Method
+            </label>
+            <div className="flex space-x-4">
+              <button
+                type="button"
+                onClick={() => setPaymentMethod("stripe")}
+                className={`px-4 py-2 rounded-lg flex items-center space-x-2 ${
+                  paymentMethod === "stripe"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                <FaCreditCard />
+                <span>Credit Card</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleBitcoinSelect}
+                className={`px-4 py-2 rounded-lg flex items-center space-x-2 ${
+                  paymentMethod === "bitcoin"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                <FaBitcoin />
+                <span>Bitcoin</span>
+              </button>
+            </div>
           </div>
-          <input
-            type="number"
-            placeholder="Dollar Amount (optional)"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            min="1"
-            step="0.01"
-            className="w-full pl-8 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
-              bg-white dark:bg-gray-700 text-gray-900 dark:text-white
-              focus:ring-2 focus:ring-blue-500 focus:border-transparent
-              transition duration-200"
-          />
-        </div>
+        )}
+
+        {paymentMethod === "stripe" && (
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-gray-500 dark:text-gray-400">$</span>
+            </div>
+            <input
+              type="number"
+              placeholder="Dollar Amount (optional)"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              min="1"
+              step="0.01"
+              className="w-full pl-8 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                bg-white dark:bg-gray-700 text-gray-900 dark:text-white
+                focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                transition duration-200"
+            />
+          </div>
+        )}
+
+        {paymentMethod === "bitcoin" && (
+          <div className="p-4 border border-gray-300 dark:border-gray-600 rounded-lg text-center">
+            <h3 className="text-xl mb-4 text-gray-900 dark:text-white">
+              Send Bitcoin Payment
+            </h3>
+            <div
+              className="flex justify-center cursor-pointer"
+              onClick={handleCopyAddress}
+              title="Click to copy Bitcoin address"
+            >
+              <QRCodeSVG
+                value={`bitcoin:${bitcoinAddress}`}
+                className="dark:bg-white dark:p-2 dark:rounded-lg"
+              />
+            </div>
+            <div className="relative">
+              <p
+                className="mt-4 text-sm break-all text-gray-600 dark:text-gray-300 cursor-pointer hover:text-blue-500 transition-colors"
+                onClick={handleCopyAddress}
+                title="Click to copy Bitcoin address"
+              >
+                {bitcoinAddress}
+              </p>
+              {showCopiedTooltip && (
+                <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 px-3 py-1 text-sm text-white bg-gray-800 dark:bg-gray-700 rounded-md opacity-90">
+                  Copied!
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         <button
           type="submit"
           disabled={isLoading || !name || !email}
