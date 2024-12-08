@@ -7,6 +7,7 @@ import { addGuest } from "../actions/guests";
 import { loadStripe } from "@stripe/stripe-js";
 import { QRCodeSVG } from "qrcode.react";
 import { FaCreditCard, FaBitcoin } from "react-icons/fa";
+const bitcoinAddress = process.env.NEXT_PUBLIC_BITCOIN_ADDRESS;
 
 declare global {
   interface Window {
@@ -34,12 +35,10 @@ export default function RSVPForm({
   contributionMessage,
   rsvpMessage,
   rsvpTitle,
-  bitcoinAddress,
 }: {
   contributionMessage: string;
   rsvpMessage: string;
   rsvpTitle: string;
-  bitcoinAddress?: string;
 }) {
   const [amount, setAmount] = useState("");
   const [name, setName] = useState("");

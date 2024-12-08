@@ -38,7 +38,6 @@ async function getHomePage() {
 
 export default async function Home() {
   const homePage = await getHomePage();
-  const bitcoinAddress = process.env.BITCOIN_ADDRESS;
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
@@ -71,7 +70,6 @@ export default async function Home() {
               rsvpTitle={homePage.metadata.rsvp_title}
               rsvpMessage={homePage.metadata.rsvp_message}
               contributionMessage={homePage.metadata.contribute_message}
-              bitcoinAddress={bitcoinAddress}
             />
           </div>
         </div>
