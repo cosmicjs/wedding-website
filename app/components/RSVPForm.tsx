@@ -99,6 +99,7 @@ export default function RSVPForm({
   };
 
   const handleCopyAddress = async () => {
+    if (!bitcoinAddress) return;
     try {
       await navigator.clipboard.writeText(bitcoinAddress);
       setShowCopiedTooltip(true);
