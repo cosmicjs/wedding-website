@@ -80,10 +80,6 @@ export default function RSVPForm({
         });
         const stripe = await stripePromise;
         await stripe?.redirectToCheckout({ sessionId });
-      } else if (paymentMethod === "bitcoin" && amount) {
-        setPaymentMethod("bitcoin");
-        setAmount("");
-      } else {
         window.location.href = "/thank-you";
       }
     } catch (error) {
