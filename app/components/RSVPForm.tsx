@@ -166,7 +166,7 @@ export default function RSVPForm({
           </select>
         </div>
         <div
-          className="pt-[20px] text-gray-600 dark:text-gray-300 text-left text-lg font-semibold"
+          className="pt-2 text-gray-600 dark:text-gray-300 text-left text-lg font-semibold"
           dangerouslySetInnerHTML={{ __html: contributionMessage }}
         />
         {bitcoinAddress && (
