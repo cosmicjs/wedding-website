@@ -1,40 +1,9 @@
 // app/page.tsx
-import cosmic from "@/lib/cosmic";
 import RSVPForm from "./components/RSVPForm";
 import Gallery from "./components/Gallery";
 import ScrollArrow from "./components/ScrollArrow";
 import Image from "next/image";
-
-async function getHomePage() {
-  const { object } = await cosmic.objects
-    .findOne({
-      type: "home-page",
-      slug: "home",
-    })
-    .props(
-      `{
-      metadata {
-        h1
-        h2
-        h3
-        gallery
-        main_image {
-          imgix_url
-          alt_text
-        }
-        contribute_message
-        rsvp_title
-        rsvp_message
-      }
-    }`
-    )
-    .options({
-      media: {
-        props: "alt_text,width,height",
-      },
-    });
-  return object;
-}
+import { getHomePage } from "@/lib/cosmic";
 
 export default async function Home() {
   const homePage = await getHomePage();
