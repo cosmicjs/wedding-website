@@ -34,7 +34,7 @@ export async function addGuest({
       metadata: {
         name,
         email,
-        attending: true, // Since they're submitting the RSVP form, we'll set this to true
+        attending: true,
         quantity,
       },
     });
