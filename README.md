@@ -8,7 +8,7 @@
 
 ## Getting started
 
-Install the Wedding Website template in Cosmic to install the required content model and demo content.
+[Install the Wedding Website template](https://www.cosmicjs.com/templates/wedding-website) in Cosmic to install the required content model and demo content.
 
 Download the code.
 ```bash
