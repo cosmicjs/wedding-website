@@ -1,6 +1,8 @@
 ## Wedding Website
 
-![wedding-website](https://imgix.cosmicjs.com/bf1b7fa0-bb21-11ef-bee4-3bb1d3c55332-wedding-website.png?w=1200&auto=format)
+<a href="https://cosmic-wedding-website.vercel.app/">
+  <img src="https://imgix.cosmicjs.com/bf1b7fa0-bb21-11ef-bee4-3bb1d3c55332-wedding-website.png?w=1200&auto=format">
+</a>
 
 [View the demo](https://cosmic-wedding-website.vercel.app/)
 
