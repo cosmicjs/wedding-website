@@ -38,6 +38,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className="bg-black text-white text-center py-2 text-sm">
+          This is a template for a wedding website powered by the Cosmic CMS.
+          Install it in your own Cosmic project from the{" "}
+          <a
+            href="https://www.cosmicjs.com/templates/wedding-website"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-gray-300"
+          >
+            Wedding Website template page on Cosmic
+          </a>
+          .
+        </div>
         {children}
         <Footer />
       </body>
