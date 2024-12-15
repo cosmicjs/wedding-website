@@ -23,9 +23,12 @@ bun i
 pnpm i
 ```
 
-Add your environment variables.
+Create an `.env` file
 ```bash
 mv .example.env .env
+```
+Add your environment variables.
+```bash
 # .env
 COSMIC_BUCKET_SLUG=
 COSMIC_READ_KEY=
